@@ -1,5 +1,5 @@
 {
-	"name":"pronique/multitenant",
+	"name":"murilowlima/multitenant",
 	"version": "0.8.1",
 	"description":"MultiTenant CakePHP Plugin -  Use this plugin to easily build SaaS enabled web applications.",
 	"type":"cakephp-plugin",
@@ -14,9 +14,9 @@
 		"multi-tenant",
 		"subdomain",
 		"cake",
-		"pronique"
+		"murilowlima"
 	],
-	"homepage":"https://github.com/pronique/multitenant",
+	"homepage":"https://github.com/murilowlima/multitenant",
 	"license":"MIT",
 	"authors":[
 		{
@@ -41,8 +41,8 @@
 		}
 	},
 	"support":{
-		"source":"https://github.com/pronique/multitenant",
-		"issues":"https://github.com/pronique/multitenant/issues"
+		"source":"https://github.com/murilowlima/multitenant",
+		"issues":"https://github.com/murilowlima/multitenant/issues"
 	},
 	"extra": {
 		"installer-name": "MultiTenant"
