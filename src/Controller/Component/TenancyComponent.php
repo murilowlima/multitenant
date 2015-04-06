@@ -6,6 +6,7 @@ use Cake\Controller\Component;
 use Cake\Event\Event;
 use Cake\Core\Exception\Exception;
 use MultiTenant\Core\MTApp;
+use MultiTenant\Error\MultiTenantException;
 
 /**
  * CakePHP TenancyComponent
@@ -23,11 +24,16 @@ class TenancyComponent extends Component {
     public function beforeFilter(Event $event) {
         MTApp::$handler = $this;
         $context = $this->getContext();
-        if ($context == 'tenant') {
+        if ($context == 'global') {
+            return;
+        }
+        try {
             $tenant = $this->getTenant();
             if ($tenant == null) {
                 return $this->redirect();
             }
+        } catch (MultiTenantException $ex) {
+            return $this->redirect();
         }
     }
 
