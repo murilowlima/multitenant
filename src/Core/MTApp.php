@@ -140,7 +140,7 @@ class MTApp {
         if (self::config('strategy') == 'domain') {
             return env('SERVER_NAME');
         } else if (self::config('strategy') == 'session') {
-            if (array_key_exists(self::config('qualifierKey'), $_SESSION)) {
+            if ($_SESSION && array_key_exists(self::config('qualifierKey'), $_SESSION)) {
                 return self::_getTenantName($_SESSION[self::config('qualifierKey')]);
             }
             return null;
