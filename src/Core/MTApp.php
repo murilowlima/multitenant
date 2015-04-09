@@ -81,12 +81,6 @@ class MTApp {
      * @returns Cake\ORM\Entity
      */
     public static function tenant() {
-
-        //if tentant/_findTenant is called at the primary domain the plugin is being used wrong;
-        if (self::isPrimary()) {
-            throw new Exception('MTApp::tenant() cannot be called from primaryDomain context');
-        }
-
         $qualifier = self::_getTenantQualifier();
 
         if ($qualifier) {
