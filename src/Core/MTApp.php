@@ -91,6 +91,9 @@ class MTApp {
 
         if ($qualifier) {
             $tenant = Cache::read($qualifier);
+            if (!$tenant) {
+                throw new MultiTenantException("MTApp::tenant() tenant not defined");
+            }
             $modelConf = self::config('model');
             $tbl = TableRegistry::get($modelConf['className']);
             $entity = $tbl->newEntity($tenant);
