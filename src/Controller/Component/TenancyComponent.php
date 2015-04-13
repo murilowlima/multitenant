@@ -7,6 +7,7 @@ use Cake\Event\Event;
 use Cake\Core\Exception\Exception;
 use MultiTenant\Core\MTApp;
 use MultiTenant\Error\MultiTenantException;
+use Cake\ORM\TableRegistry;
 
 /**
  * CakePHP TenancyComponent
@@ -15,10 +16,11 @@ use MultiTenant\Error\MultiTenantException;
 class TenancyComponent extends Component {
 
     public $components = array();
+    public static $sessionKey = 'Auth.User.Tenant';
+    private $_cache = null;
     protected $_defaultConfig = [
-        'qualifierKey' => null,
-        'strategy' => null,
-        'redirect' => null
+        'redirect' => null,
+        'model' => null
     ];
 
     public function beforeFilter(Event $event) {
@@ -38,11 +40,23 @@ class TenancyComponent extends Component {
     }
 
     public function getTenant() {
-        return MTApp::tenant();
+        if ($this->_cache !== null) {
+            return $this->_cache;
+        }
+        $tenant = $this->request->session()->read(self::$sessionKey);
+        $tbl = TableRegistry::get($this->config('model'));
+        $entity = $tbl->newEntity($tenant);
+        $entity->set('id', $tenant['id']);
+        return $entity;
     }
 
     public function setTenant($tenant) {
-        MTApp::setTenant($tenant);
+        $this->_cache = $tenant;
+        $this->request->session()->write(self::$sessionKey, $tenant);
+    }
+
+    public function unsetTenant() {
+        return;
     }
 
     public function redirect() {
@@ -73,9 +87,4 @@ class TenancyComponent extends Component {
 
         return 'tenant';
     }
-
-    public function unsetTenant() {
-        MTApp::unsetTenant();
-    }
-
 }

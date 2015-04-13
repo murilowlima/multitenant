@@ -22,16 +22,14 @@ use Cake\ORM\TableRegistry;
 use Cake\Cache\Cache;
 use MultiTenant\Error\MultiTenantException;
 
-//TODO Implement Singleton/Caching to eliminate sql query on every call
 class MTApp {
 
     use StaticConfigTrait {
         config as public _config;
     }
 
-    //PHP variables persist for the lifetime of the script running through the interpreter.
     public static $handler = null;
-    protected static $_cachedAccounts = [];
+    protected static $_cache = null;
 
     /**
      * find the current context based on domain/subdomain
@@ -81,6 +79,10 @@ class MTApp {
      * @returns Cake\ORM\Entity
      */
     public static function tenant() {
+        if (self::$handler) {
+            return self::$handler->getTenant();
+        }
+
         $qualifier = self::_getTenantQualifier();
 
         if ($qualifier) {
@@ -105,6 +107,10 @@ class MTApp {
      * @returns void
      */
     public static function setTenant($tenant) {
+        if (self::$handler) {
+            return self::$handler->setTenant($tenant);
+        }
+
         if (self::config('strategy') == 'session') {
             $_SESSION[self::config('qualifierKey')] = $tenant['id'];
         }
@@ -123,6 +129,10 @@ class MTApp {
      * @returns void
      */
     public static function unsetTenant() {
+        if (self::$handler) {
+            return self::$handler->unsetTenant();
+        }
+
         $qualifier = self::_getTenantQualifier();
         if ($qualifier) {
             Cache::delete($qualifier);
